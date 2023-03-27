@@ -14,25 +14,26 @@
       async function searchWords() {
         const input = document.getElementById("input-box").value.trim().toLowerCase();
         const response = await fetch("words.txt");
-        const lines = (await response.text()).split("\n");
-        const categories = new Map();
-        for (let line of lines) {
-          const parts = line.split(",");
-          const category = parts[0].trim();
-          const words = parts.slice(1).map((word) => word.trim());
-          categories.set(category, words);
-        }
+        const words = (await response.text()).split("\n").map((line) => line.trim().split(","));
         const results = [];
-        for (let [category, words] of categories.entries()) {
-          const categoryResults = words
-            .filter((word) => word.length > 0 && !isSubstring(word, input) && isAnagram(word, input))
-            .map((word) => word.toUpperCase());
-          if (categoryResults.length > 0) {
-            results.push(`${category}: ${categoryResults.join(", ")}`);
+
+        for (const line of words) {
+          if (line.length > 1) {
+            const category = line[0];
+            const words = line.slice(1);
+
+            const categoryResults = words.filter(
+              (word) => word.length > 0 && !isSubstring(word, input) && isAnagram(word, input)
+            );
+
+            if (categoryResults.length > 0) {
+              results.push(`${category}: ${categoryResults.join(", ")}`);
+            }
           }
         }
-        const resultsText = results.length > 0 ? results.join("\n") : "No matches found.";
-        document.getElementById("results").textContent = resultsText;
+
+        const resultsText = results.length > 0 ? results.join("<br>") : "No matches found.";
+        document.getElementById("results").innerHTML = resultsText;
       }
 
       function isSubstring(word, input) {
@@ -40,10 +41,33 @@
       }
 
       function isAnagram(word, input) {
-        const wordChars = word.split("").sort();
-        const inputChars = input.split("").sort();
-        return wordChars.length === inputChars.length && wordChars.every((char, index) => char === inputChars[index]);
+        const wordChars = word.split("");
+        const inputChars = input.split("");
+
+        if (wordChars.length !== inputChars.length) {
+          return false;
+        }
+
+        const wordCounts = {};
+        const inputCounts = {};
+
+        for (const char of wordChars) {
+          wordCounts[char] = (wordCounts[char] || 0) + 1;
+        }
+
+        for (const char of inputChars) {
+          inputCounts[char] = (inputCounts[char] || 0) + 1;
+        }
+
+        for (const char of Object.keys(wordCounts)) {
+          if (wordCounts[char] !== inputCounts[char]) {
+            return false;
+          }
+        }
+
+        return true;
       }
     </script>
   </body>
 </html>
+

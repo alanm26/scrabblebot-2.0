@@ -1,2 +1,1 @@
-4 letter words,arms,boot,chin,hair,nail,palm,song,toes
-5 letter words,aorta,bones,chest,heart,joint,mouth,spine,woman
+arms,boot,chin,hair,nail,palm,song,toes,aorta,bones,chest,heart,joint,mouth,spine,woman

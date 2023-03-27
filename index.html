@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Word Search</title>
+  </head>
+  <body>
+    <label for="input-box">Enter letters:</label>
+    <input type="text" id="input-box">
+    <button onclick="searchWords()">Search</button>
+    <p id="results"></p>
+
+    <script>
+      async function searchWords() {
+        const input = document.getElementById("input-box").value.trim().toLowerCase();
+        const response = await fetch("words.txt");
+        const words = (await response.text()).split(",").map((word) => word.trim());
+        const results = words
+          .filter((word) => word.length > 0 && !input.includes(word))
+          .filter((word) => isSubset(word, input))
+          .map((word) => word.toUpperCase());
+
+        const resultsText = results.length > 0 ? results.join(", ") : "No matches found.";
+        document.getElementById("results").textContent = resultsText;
+      }
+
+      function isSubset(word, input) {
+        const chars = word.split("");
+        for (const char of chars) {
+          const index = input.indexOf(char);
+          if (index === -1) {
+            return false;
+          }
+          input = input.substring(0, index) + input.substring(index + 1);
+        }
+        return true;
+      }
+    </script>
+  </body>
+</html>

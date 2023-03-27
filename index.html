@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Word Search</title>
+  </head>
+  <body>
+    <label for="input-box">Enter letters:</label>
+    <input type="text" id="input-box">
+    <button onclick="searchWords()">Search</button>
+    <p id="results"></p>
+
+    <script>
+      async function searchWords() {
+        const input = document.getElementById("input-box").value.trim().toLowerCase().split('').sort().join('');
+        const response = await fetch("words.txt");
+        const words = (await response.text()).split(",");
+        const results = words
+          .filter((word) => word.length > 0 && !word.includes(input) && isAnagram(word, input))
+          .map((word) => word.toUpperCase());
+
+        const resultsText = results.length > 0 ? results.join(", ") : "No matches found.";
+        document.getElementById("results").textContent = resultsText;
+      }
+
+      function isAnagram(word, input) {
+        const wordSorted = word.trim().toLowerCase().split('').sort().join('');
+        return wordSorted === input && wordSorted !== input;
+      }
+    </script>
+  </body>
+</html>

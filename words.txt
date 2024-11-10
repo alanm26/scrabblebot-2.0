@@ -1,1 +1,1 @@
-bear,dota,juke,open,wake,smile,proud,under,video
+bear,dota,open,wake,smile,under

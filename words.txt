@@ -1,1 +1,1 @@
-grow,nuts,robs,talk,wide,wish,jungle,grump,shady,honor,normal,rewind
+grow,talk,wish,jungle,grump,shady,rewind
